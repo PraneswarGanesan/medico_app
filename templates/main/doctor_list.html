@@ -1,0 +1,67 @@
+{% extends 'main/layout.html' %}
+{% block title %}Find Doctors — Medico{% endblock %}
+
+{% block content %}
+<div class="page-container">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Find a Doctor</h1>
+      <p class="page-subtitle">Browse available doctors and book your appointment.</p>
+    </div>
+  </div>
+
+  <!-- Filter -->
+  <div class="filter-bar">
+    <form method="get" class="filter-form">
+      <select name="specialization" class="filter-select" onchange="this.form.submit()">
+        <option value="">All Specializations</option>
+        {% for val, label in specializations %}
+        <option value="{{ val }}" {% if selected_specialization == val %}selected{% endif %}>{{ label }}</option>
+        {% endfor %}
+      </select>
+      {% if selected_specialization %}
+      <a href="{% url 'doctor_list' %}" class="btn btn-outline-sm">Clear Filter</a>
+      {% endif %}
+    </form>
+  </div>
+
+  {% if doctors %}
+  <div class="doctors-grid">
+    {% for doctor in doctors %}
+    <div class="doctor-card">
+      <div class="doctor-card-avatar">
+        {{ doctor.first_name|first|upper }}{{ doctor.last_name|first|upper|default:"D" }}
+      </div>
+      <div class="doctor-card-body">
+        <h3 class="doctor-name">Dr. {{ doctor.get_full_name|default:doctor.username }}</h3>
+        <div class="doctor-spec">{{ doctor.doctor_profile.get_specialization_display }}</div>
+        {% if doctor.doctor_profile.qualification %}
+        <div class="doctor-qual text-muted text-sm">{{ doctor.doctor_profile.qualification }}</div>
+        {% endif %}
+        <div class="doctor-meta">
+          {% if doctor.doctor_profile.experience_years %}
+          <span class="meta-chip">{{ doctor.doctor_profile.experience_years }} yrs exp</span>
+          {% endif %}
+          {% if doctor.doctor_profile.consultation_fee %}
+          <span class="meta-chip">₹{{ doctor.doctor_profile.consultation_fee }}</span>
+          {% endif %}
+        </div>
+        {% if doctor.doctor_profile.bio %}
+        <p class="doctor-bio text-sm">{{ doctor.doctor_profile.bio|truncatechars:100 }}</p>
+        {% endif %}
+      </div>
+      <div class="doctor-card-footer">
+        <a href="{% url 'doctor_detail' doctor.pk %}" class="btn btn-primary btn-full">View & Book</a>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="empty-page">
+    <div class="empty-icon">🔍</div>
+    <h2>No doctors found</h2>
+    <p>Try clearing the filter or check back later.</p>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

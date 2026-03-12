@@ -1,0 +1,36 @@
+{% extends 'main/layout.html' %}
+{% block title %}{{ action }} Slot — Medico{% endblock %}
+
+{% block content %}
+<div class="auth-page">
+  <div class="auth-card">
+    <div class="auth-header">
+      
+      <h1>{{ action }} Availability Slot</h1>
+      <p>Set when you are available for patient appointments.</p>
+    </div>
+    <form method="post" class="auth-form">
+      {% csrf_token %}
+      {% for field in form %}
+      <div class="form-group">
+        <label class="form-label">{{ field.label }}</label>
+        {{ field }}
+        {% if field.help_text %}
+          <span class="form-help">{{ field.help_text }}</span>
+        {% endif %}
+        {% for e in field.errors %}
+          <span class="form-error">{{ e }}</span>
+        {% endfor %}
+      </div>
+      {% endfor %}
+      {% if form.non_field_errors %}
+      <div class="form-error-box">{% for e in form.non_field_errors %}{{ e }}{% endfor %}</div>
+      {% endif %}
+      <div class="form-actions">
+        <a href="{% url 'slot_list' %}" class="btn btn-outline">Cancel</a>
+        <button type="submit" class="btn btn-primary">{{ action }} Slot</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

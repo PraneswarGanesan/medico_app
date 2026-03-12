@@ -1,0 +1,52 @@
+{% extends 'main/layout.html' %}
+{% block title %}Book Appointment — Medico{% endblock %}
+
+{% block content %}
+<div class="auth-page">
+  <div class="auth-card">
+    <div class="auth-header">
+      <div class="auth-icon">📅</div>
+      <h1>Confirm Booking</h1>
+      <p>Review your appointment details before confirming.</p>
+    </div>
+
+    <div class="booking-summary">
+      <div class="info-row">
+        <span>Doctor</span>
+        <strong>Dr. {{ slot.doctor.get_full_name|default:slot.doctor.username }}</strong>
+      </div>
+      <div class="info-row">
+        <span>Specialization</span>
+        <strong>{{ slot.doctor.doctor_profile.get_specialization_display }}</strong>
+      </div>
+      <div class="info-row">
+        <span>Date</span>
+        <strong>{{ slot.date }}</strong>
+      </div>
+      <div class="info-row">
+        <span>Time</span>
+        <strong>{{ slot.start_time|time:"H:i" }} – {{ slot.end_time|time:"H:i" }}</strong>
+      </div>
+      {% if slot.doctor.doctor_profile.consultation_fee %}
+      <div class="info-row">
+        <span>Consultation Fee</span>
+        <strong>₹{{ slot.doctor.doctor_profile.consultation_fee }}</strong>
+      </div>
+      {% endif %}
+    </div>
+
+    <form method="post" class="auth-form">
+      {% csrf_token %}
+      <div class="form-group">
+        <label class="form-label">Reason for Visit <span class="text-muted">(optional)</span></label>
+        {{ form.reason }}
+        {% for e in form.reason.errors %}<span class="form-error">{{ e }}</span>{% endfor %}
+      </div>
+      <div class="form-actions">
+        <a href="{% url 'doctor_detail' slot.doctor.pk %}" class="btn btn-outline">Cancel</a>
+        <button type="submit" class="btn btn-primary">Confirm Booking</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

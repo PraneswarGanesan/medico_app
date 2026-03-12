@@ -1,0 +1,81 @@
+{% extends 'main/layout.html' %}
+{% block title %}Patient Sign Up — Medico{% endblock %}
+
+{% block content %}
+<div class="auth-page auth-page-wide">
+  <div class="auth-card auth-card-wide">
+    <div class="auth-header">
+      
+      <h1>Join as a Patient</h1>
+      <p>Create your patient account on Medico</p>
+    </div>
+    <form method="post" class="auth-form">
+      {% csrf_token %}
+      <div class="form-grid-2">
+        <div class="form-group">
+          <label class="form-label">First Name</label>
+          {{ form.first_name }}
+          {% for e in form.first_name.errors %}<span class="form-error">{{ e }}</span>{% endfor %}
+        </div>
+        <div class="form-group">
+          <label class="form-label">Last Name</label>
+          {{ form.last_name }}
+          {% for e in form.last_name.errors %}<span class="form-error">{{ e }}</span>{% endfor %}
+        </div>
+        <div class="form-group">
+          <label class="form-label">Username</label>
+          {{ form.username }}
+          {% for e in form.username.errors %}<span class="form-error">{{ e }}</span>{% endfor %}
+        </div>
+        <div class="form-group">
+          <label class="form-label">Email</label>
+          {{ form.email }}
+          {% for e in form.email.errors %}<span class="form-error">{{ e }}</span>{% endfor %}
+        </div>
+        <div class="form-group">
+          <label class="form-label">Phone</label>
+          {{ form.phone }}
+          {% for e in form.phone.errors %}<span class="form-error">{{ e }}</span>{% endfor %}
+        </div>
+        <div class="form-group">
+          <label class="form-label">Date of Birth</label>
+          {{ form.date_of_birth }}
+          {% for e in form.date_of_birth.errors %}<span class="form-error">{{ e }}</span>{% endfor %}
+        </div>
+        <div class="form-group">
+          <label class="form-label">Blood Group</label>
+          {{ form.blood_group }}
+          {% for e in form.blood_group.errors %}<span class="form-error">{{ e }}</span>{% endfor %}
+        </div>
+        <div class="form-group">
+          <label class="form-label">Emergency Contact</label>
+          {{ form.emergency_contact }}
+          {% for e in form.emergency_contact.errors %}<span class="form-error">{{ e }}</span>{% endfor %}
+        </div>
+        <div class="form-group span-2">
+          <label class="form-label">Address</label>
+          {{ form.address }}
+          {% for e in form.address.errors %}<span class="form-error">{{ e }}</span>{% endfor %}
+        </div>
+        <div class="form-group">
+          <label class="form-label">Password</label>
+          {{ form.password1 }}
+          {% for e in form.password1.errors %}<span class="form-error">{{ e }}</span>{% endfor %}
+        </div>
+        <div class="form-group">
+          <label class="form-label">Confirm Password</label>
+          {{ form.password2 }}
+          {% for e in form.password2.errors %}<span class="form-error">{{ e }}</span>{% endfor %}
+        </div>
+      </div>
+      {% if form.non_field_errors %}
+      <div class="form-error-box">{% for e in form.non_field_errors %}{{ e }}{% endfor %}</div>
+      {% endif %}
+      <button type="submit" class="btn btn-primary btn-full">Create Patient Account</button>
+    </form>
+    <div class="auth-footer">
+      <p>Already have an account? <a href="{% url 'login' %}">Sign in</a></p>
+    </div>
+  </div>
+</div>
+{% endblock %}

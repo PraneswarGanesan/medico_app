@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>{% block title %}Medico HMS{% endblock %}</title>
+  {% load static %}
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="{% static 'css/main.css' %}"/>
+  {% block extra_head %}{% endblock %}
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="{% url 'home' %}" class="nav-brand">
+        <span class="brand-icon">✦</span> Medico
+      </a>
+      <div class="nav-links">
+        {% if user.is_authenticated %}
+          {% if user.is_doctor %}
+            <a href="{% url 'doctor_dashboard' %}" class="nav-link">Dashboard</a>
+            <a href="{% url 'slot_list' %}" class="nav-link">My Slots</a>
+            <a href="{% url 'doctor_appointments' %}" class="nav-link">Appointments</a>
+            <a href="{% url 'doctor_profile' %}" class="nav-link">Profile</a>
+          {% else %}
+            <a href="{% url 'patient_dashboard' %}" class="nav-link">Dashboard</a>
+            <a href="{% url 'doctor_list' %}" class="nav-link">Find Doctors</a>
+            <a href="{% url 'patient_appointments' %}" class="nav-link">My Bookings</a>
+            <a href="{% url 'patient_profile' %}" class="nav-link">Profile</a>
+          {% endif %}
+          <span class="nav-user">
+            <span class="user-badge {% if user.is_doctor %}badge-doctor{% else %}badge-patient{% endif %}">
+              {{ user.role|capfirst }}
+            </span>
+            {{ user.get_full_name|default:user.username }}
+          </span>
+          <a href="{% url 'logout' %}" class="btn btn-outline-sm">Logout</a>
+        {% else %}
+          <a href="{% url 'login' %}" class="nav-link">Login</a>
+          <a href="{% url 'signup_doctor' %}" class="nav-link">Doctor Sign Up</a>
+          <a href="{% url 'signup_patient' %}" class="btn btn-primary-sm">Patient Sign Up</a>
+        {% endif %}
+      </div>
+    </div>
+  </nav>
+
+  <!-- MESSAGES -->
+  {% if messages %}
+  <div class="messages-container">
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }}">
+      <span>{{ message }}</span>
+      <button class="alert-close" onclick="this.parentElement.remove()">×</button>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <!-- CONTENT -->
+  <main class="main-content">
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <span class="brand-icon">✦</span> Medico HMS &copy; 2024 &mdash; Healing with technology.
+    </div>
+  </footer>
+
+  <script src="{% static 'js/main.js' %}"></script>
+  {% block extra_js %}{% endblock %}
+</body>
+</html>

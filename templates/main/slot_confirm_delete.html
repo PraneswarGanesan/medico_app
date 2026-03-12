@@ -1,0 +1,26 @@
+{% extends 'main/layout.html' %}
+{% block title %}Delete Slot — Medico{% endblock %}
+
+{% block content %}
+<div class="auth-page">
+  <div class="auth-card">
+    <div class="auth-header">
+      <div class="auth-icon">⚠️</div>
+      <h1>Delete Slot?</h1>
+      <p>This action cannot be undone.</p>
+    </div>
+    <div class="confirm-info">
+      <div class="info-row"><span>Date:</span><strong>{{ object.date }}</strong></div>
+      <div class="info-row"><span>Time:</span><strong>{{ object.start_time|time:"H:i" }} – {{ object.end_time|time:"H:i" }}</strong></div>
+      <div class="info-row"><span>Status:</span><strong>Available</strong></div>
+    </div>
+    <form method="post" class="auth-form">
+      {% csrf_token %}
+      <div class="form-actions">
+        <a href="{% url 'slot_list' %}" class="btn btn-outline">Cancel</a>
+        <button type="submit" class="btn btn-danger">Yes, Delete</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

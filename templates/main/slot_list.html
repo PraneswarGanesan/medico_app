@@ -1,0 +1,85 @@
+{% extends 'main/layout.html' %}
+{% block title %}My Slots — Medico{% endblock %}
+
+{% block content %}
+<div class="page-container">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Availability Slots</h1>
+      <p class="page-subtitle">Manage your time slots for patient bookings.</p>
+    </div>
+    <a href="{% url 'slot_create' %}" class="btn btn-primary">+ Add New Slot</a>
+  </div>
+
+  {% if slots %}
+  <div class="card">
+    <div class="table-wrap">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Start Time</th>
+            <th>End Time</th>
+            <th>Duration</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for slot in slots %}
+          <tr>
+            <td><strong>{{ slot.date }}</strong></td>
+            <td>{{ slot.start_time|time:"H:i" }}</td>
+            <td>{{ slot.end_time|time:"H:i" }}</td>
+            <td>
+              {% with start=slot.start_time end=slot.end_time %}
+              <span class="text-muted">—</span>
+              {% endwith %}
+            </td>
+            <td>
+              {% if slot.is_booked %}
+                <span class="badge badge-booked">Booked</span>
+              {% else %}
+                <span class="badge badge-free">Available</span>
+              {% endif %}
+            </td>
+            <td>
+              <div class="action-btns">
+                {% if not slot.is_booked %}
+                <a href="{% url 'slot_edit' slot.pk %}" class="btn btn-xs btn-outline">Edit</a>
+                <form method="post" action="{% url 'slot_delete' slot.pk %}" style="display:inline" onsubmit="return confirm('Delete this slot?')">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-xs btn-danger">Delete</button>
+                </form>
+                {% else %}
+                <span class="text-muted text-sm">Locked (Booked)</span>
+                {% endif %}
+              </div>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% if is_paginated %}
+    <div class="pagination">
+      {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}" class="page-btn">← Prev</a>
+      {% endif %}
+      <span class="page-info">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+      {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}" class="page-btn">Next →</a>
+      {% endif %}
+    </div>
+    {% endif %}
+  </div>
+  {% else %}
+  <div class="empty-page">
+    <div class="empty-icon">🕐</div>
+    <h2>No slots yet</h2>
+    <p>Start by adding your first availability slot so patients can book appointments.</p>
+    <a href="{% url 'slot_create' %}" class="btn btn-primary">Add First Slot</a>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

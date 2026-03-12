@@ -1,0 +1,34 @@
+service: medico-email-service
+
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: python3.11
+  region: ap-south-1
+  memorySize: 128
+  timeout: 10
+  environment:
+    SMTP_HOST: ${env:SMTP_HOST, 'smtp.gmail.com'}
+    SMTP_PORT: ${env:SMTP_PORT, '587'}
+    SMTP_USER: ${env:SMTP_USER, ''}
+    SMTP_PASSWORD: ${env:SMTP_PASSWORD, ''}
+    FROM_EMAIL: ${env:FROM_EMAIL, 'noreply@medico.com'}
+    FROM_NAME: 'Medico HMS'
+
+functions:
+  sendEmail:
+    handler: handler.send_email
+    events:
+      - http:
+          path: /email/send
+          method: post
+          cors: true
+
+plugins:
+  - serverless-offline
+
+custom:
+  serverless-offline:
+    httpPort: 3000
+    host: 0.0.0.0

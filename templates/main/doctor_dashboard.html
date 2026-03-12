@@ -1,0 +1,101 @@
+{% extends 'main/layout.html' %}
+{% block title %}Doctor Dashboard — Medico{% endblock %}
+
+{% block content %}
+<div class="page-container">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Good day, Dr. {{ user.get_full_name|default:user.username }} </h1>
+      <p class="page-subtitle">Here's your schedule at a glance.</p>
+    </div>
+    <a href="{% url 'slot_create' %}" class="btn btn-primary">+ Add Slot</a>
+  </div>
+
+  <!-- Stats Row -->
+  <div class="stats-row">
+    <div class="stat-card stat-sage">
+      <div class="stat-card-icon"></div>
+      <div class="stat-card-body">
+        <div class="stat-card-num">{{ upcoming_slots.count }}</div>
+        <div class="stat-card-label">Upcoming Slots</div>
+      </div>
+    </div>
+    <div class="stat-card stat-yellow">
+      <div class="stat-card-icon"></div>
+      <div class="stat-card-body">
+        <div class="stat-card-num">{{ today_appointments }}</div>
+        <div class="stat-card-label">Today's Appointments</div>
+      </div>
+    </div>
+    <div class="stat-card stat-lime">
+      <div class="stat-card-icon"></div>
+      <div class="stat-card-body">
+        <div class="stat-card-num">{{ total_appointments }}</div>
+        <div class="stat-card-label">Total Appointments</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="dashboard-grid">
+    <!-- Upcoming Appointments -->
+    <div class="dash-card">
+      <div class="dash-card-header">
+        <h2>Upcoming Appointments</h2>
+        <a href="{% url 'doctor_appointments' %}" class="link-sm">View all →</a>
+      </div>
+      {% if upcoming_appointments %}
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr><th>Patient</th><th>Date</th><th>Time</th><th>Status</th></tr>
+            </thead>
+            <tbody>
+              {% for appt in upcoming_appointments %}
+              <tr>
+                <td><strong>{{ appt.patient.get_full_name|default:appt.patient.username }}</strong></td>
+                <td>{{ appt.slot.date }}</td>
+                <td>{{ appt.slot.start_time|time:"H:i" }} – {{ appt.slot.end_time|time:"H:i" }}</td>
+                <td><span class="badge badge-confirmed">{{ appt.status|capfirst }}</span></td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% else %}
+        <div class="empty-state">
+          
+          <p>Check all your upcoming appointments here....</p>
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- Recent Slots -->
+    <div class="dash-card">
+      <div class="dash-card-header">
+        <h2>Your Availability Slots</h2>
+        <a href="{% url 'slot_list' %}" class="link-sm">Manage →</a>
+      </div>
+      {% if upcoming_slots %}
+        <div class="slot-list-mini">
+          {% for slot in upcoming_slots|slice:":6" %}
+          <div class="slot-mini {% if slot.is_booked %}slot-booked{% else %}slot-free{% endif %}">
+            <div>
+              <div class="slot-mini-date">{{ slot.date }}</div>
+              <div class="slot-mini-time">{{ slot.start_time|time:"H:i" }} – {{ slot.end_time|time:"H:i" }}</div>
+            </div>
+            <span class="badge {% if slot.is_booked %}badge-booked{% else %}badge-free{% endif %}">
+              {% if slot.is_booked %}Booked{% else %}Free{% endif %}
+            </span>
+          </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="empty-state">
+          
+          <a href="{% url 'slot_create' %}" class="btn btn-primary">Add Slots</a>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

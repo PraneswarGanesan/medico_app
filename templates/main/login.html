@@ -1,0 +1,42 @@
+{% extends 'main/layout.html' %}
+{% block title %}Login — Medico{% endblock %}
+
+{% block content %}
+<div class="auth-page">
+  <div class="auth-card">
+    <div class="auth-header">
+      <div class="auth-icon">✦</div>
+      <h1>Welcome Back</h1>
+      <p>Sign in to your Medico account</p>
+    </div>
+    <form method="post" class="auth-form">
+      {% csrf_token %}
+      {% for field in form %}
+      <div class="form-group">
+        <label class="form-label">{{ field.label }}</label>
+        {{ field }}
+        {% if field.errors %}
+          {% for error in field.errors %}
+          <span class="form-error">{{ error }}</span>
+          {% endfor %}
+        {% endif %}
+      </div>
+      {% endfor %}
+      {% if form.non_field_errors %}
+      <div class="form-error-box">
+        {% for error in form.non_field_errors %}{{ error }}{% endfor %}
+      </div>
+      {% endif %}
+      <button type="submit" class="btn btn-primary btn-full">Sign In</button>
+    </form>
+    <div class="auth-footer">
+      <p>Don't have an account?</p>
+      <div class="auth-footer-links">
+        <a href="{% url 'signup_patient' %}">Sign up as Patient</a>
+        <span>·</span>
+        <a href="{% url 'signup_doctor' %}">Sign up as Doctor</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,86 @@
+{% extends 'main/layout.html' %}
+{% block title %}Doctor Sign Up — Medico{% endblock %}
+
+{% block content %}
+<div class="auth-page auth-page-wide">
+  <div class="auth-card auth-card-wide">
+    <div class="auth-header">
+      
+      <h1>Join as a Doctor</h1>
+      <p>Create your doctor account on Medico</p>
+    </div>
+    <form method="post" class="auth-form">
+      {% csrf_token %}
+      <div class="form-grid-2">
+        <div class="form-group">
+          <label class="form-label">First Name</label>
+          {{ form.first_name }}
+          {% for e in form.first_name.errors %}<span class="form-error">{{ e }}</span>{% endfor %}
+        </div>
+        <div class="form-group">
+          <label class="form-label">Last Name</label>
+          {{ form.last_name }}
+          {% for e in form.last_name.errors %}<span class="form-error">{{ e }}</span>{% endfor %}
+        </div>
+        <div class="form-group">
+          <label class="form-label">Username</label>
+          {{ form.username }}
+          {% for e in form.username.errors %}<span class="form-error">{{ e }}</span>{% endfor %}
+        </div>
+        <div class="form-group">
+          <label class="form-label">Email</label>
+          {{ form.email }}
+          {% for e in form.email.errors %}<span class="form-error">{{ e }}</span>{% endfor %}
+        </div>
+        <div class="form-group">
+          <label class="form-label">Phone</label>
+          {{ form.phone }}
+          {% for e in form.phone.errors %}<span class="form-error">{{ e }}</span>{% endfor %}
+        </div>
+        <div class="form-group">
+          <label class="form-label">Specialization</label>
+          {{ form.specialization }}
+          {% for e in form.specialization.errors %}<span class="form-error">{{ e }}</span>{% endfor %}
+        </div>
+        <div class="form-group">
+          <label class="form-label">Qualification</label>
+          {{ form.qualification }}
+          {% for e in form.qualification.errors %}<span class="form-error">{{ e }}</span>{% endfor %}
+        </div>
+        <div class="form-group">
+          <label class="form-label">Experience (years)</label>
+          {{ form.experience_years }}
+          {% for e in form.experience_years.errors %}<span class="form-error">{{ e }}</span>{% endfor %}
+        </div>
+        <div class="form-group">
+          <label class="form-label">Consultation Fee (₹)</label>
+          {{ form.consultation_fee }}
+          {% for e in form.consultation_fee.errors %}<span class="form-error">{{ e }}</span>{% endfor %}
+        </div>
+        <div class="form-group span-2">
+          <label class="form-label">Bio</label>
+          {{ form.bio }}
+          {% for e in form.bio.errors %}<span class="form-error">{{ e }}</span>{% endfor %}
+        </div>
+        <div class="form-group">
+          <label class="form-label">Password</label>
+          {{ form.password1 }}
+          {% for e in form.password1.errors %}<span class="form-error">{{ e }}</span>{% endfor %}
+        </div>
+        <div class="form-group">
+          <label class="form-label">Confirm Password</label>
+          {{ form.password2 }}
+          {% for e in form.password2.errors %}<span class="form-error">{{ e }}</span>{% endfor %}
+        </div>
+      </div>
+      {% if form.non_field_errors %}
+      <div class="form-error-box">{% for e in form.non_field_errors %}{{ e }}{% endfor %}</div>
+      {% endif %}
+      <button type="submit" class="btn btn-primary btn-full">Create Doctor Account</button>
+    </form>
+    <div class="auth-footer">
+      <p>Already have an account? <a href="{% url 'login' %}">Sign in</a></p>
+    </div>
+  </div>
+</div>
+{% endblock %}

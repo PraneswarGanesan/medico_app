@@ -1,0 +1,68 @@
+{% extends 'main/layout.html' %}
+{% block title %}My Bookings — Medico{% endblock %}
+
+{% block content %}
+<div class="page-container">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">My Appointments</h1>
+      <p class="page-subtitle">All your past and upcoming bookings.</p>
+    </div>
+    <a href="{% url 'doctor_list' %}" class="btn btn-primary">+ Book New</a>
+  </div>
+
+  {% if appointments %}
+  <div class="card">
+    <div class="table-wrap">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Doctor</th>
+            <th>Specialization</th>
+            <th>Date</th>
+            <th>Time</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for appt in appointments %}
+          <tr>
+            <td><strong>Dr. {{ appt.slot.doctor.get_full_name|default:appt.slot.doctor.username }}</strong></td>
+            <td>{{ appt.slot.doctor.doctor_profile.get_specialization_display }}</td>
+            <td>{{ appt.slot.date }}</td>
+            <td>{{ appt.slot.start_time|time:"H:i" }} – {{ appt.slot.end_time|time:"H:i" }}</td>
+            <td><span class="badge badge-{{ appt.status }}">{{ appt.status|capfirst }}</span></td>
+            <td>
+              {% if appt.status == 'confirmed' %}
+              <form method="post" action="{% url 'cancel_appointment' appt.pk %}" onsubmit="return confirm('Cancel this appointment?')">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-xs btn-danger">Cancel</button>
+              </form>
+              {% else %}
+              <span class="text-muted text-sm">—</span>
+              {% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% if is_paginated %}
+    <div class="pagination">
+      {% if page_obj.has_previous %}<a href="?page={{ page_obj.previous_page_number }}" class="page-btn">← Prev</a>{% endif %}
+      <span class="page-info">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+      {% if page_obj.has_next %}<a href="?page={{ page_obj.next_page_number }}" class="page-btn">Next →</a>{% endif %}
+    </div>
+    {% endif %}
+  </div>
+  {% else %}
+  <div class="empty-page">
+    <div class="empty-icon"></div>
+    <h2>No appointments yet</h2>
+    <p>Find a doctor and book your first appointment.</p>
+    <a href="{% url 'doctor_list' %}" class="btn btn-primary">Browse Doctors</a>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

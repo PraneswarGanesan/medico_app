@@ -1,0 +1,13 @@
+{
+  "name": "medico-email-service",
+  "version": "1.0.0",
+  "description": "Serverless email notification service for Medico HMS",
+  "scripts": {
+    "start": "serverless offline",
+    "deploy": "serverless deploy"
+  },
+  "devDependencies": {
+    "serverless": "^3.38.0",
+    "serverless-offline": "^13.3.2"
+  }
+}

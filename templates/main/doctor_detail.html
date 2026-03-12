@@ -1,0 +1,64 @@
+{% extends 'main/layout.html' %}
+{% block title %}Dr. {{ doctor.get_full_name }} — Medico{% endblock %}
+
+{% block content %}
+<div class="page-container">
+  <a href="{% url 'doctor_list' %}" class="back-link">← Back to Doctors</a>
+
+  <div class="detail-layout">
+    <!-- Doctor Info -->
+    <div class="detail-sidebar">
+      <div class="doctor-card-big">
+        <div class="doctor-avatar-big">
+          {{ doctor.first_name|first|upper }}{{ doctor.last_name|first|upper|default:"D" }}
+        </div>
+        <h2>Dr. {{ doctor.get_full_name|default:doctor.username }}</h2>
+        <div class="doctor-spec">{{ doctor.doctor_profile.get_specialization_display }}</div>
+        <div class="info-rows">
+          {% if doctor.doctor_profile.qualification %}
+          <div class="info-row"><span>Qualification</span><strong>{{ doctor.doctor_profile.qualification }}</strong></div>
+          {% endif %}
+          {% if doctor.doctor_profile.experience_years %}
+          <div class="info-row"><span>Experience</span><strong>{{ doctor.doctor_profile.experience_years }} years</strong></div>
+          {% endif %}
+          {% if doctor.doctor_profile.consultation_fee %}
+          <div class="info-row"><span>Fee</span><strong>₹{{ doctor.doctor_profile.consultation_fee }}</strong></div>
+          {% endif %}
+        </div>
+        {% if doctor.doctor_profile.bio %}
+        <p class="doctor-bio">{{ doctor.doctor_profile.bio }}</p>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Slots -->
+    <div class="detail-main">
+      <h2 class="section-title-sm">Available Slots</h2>
+      {% if available_slots %}
+        <div class="slots-grid">
+          {% regroup available_slots by date as slots_by_date %}
+          {% for day in slots_by_date %}
+          <div class="slot-day-group">
+            <div class="slot-day-label">{{ day.grouper }}</div>
+            <div class="slot-items">
+              {% for slot in day.list %}
+              <div class="slot-item">
+                <div class="slot-time">{{ slot.start_time|time:"H:i" }} – {{ slot.end_time|time:"H:i" }}</div>
+                <a href="{% url 'book_appointment' slot.pk %}" class="btn btn-primary-sm">Book</a>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="empty-state">
+          <div class="empty-icon">😔</div>
+          <p>No available slots for this doctor right now.</p>
+          <p class="text-muted text-sm">Please check back later.</p>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

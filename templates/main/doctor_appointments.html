@@ -1,0 +1,63 @@
+{% extends 'main/layout.html' %}
+{% block title %}My Appointments — Medico{% endblock %}
+
+{% block content %}
+<div class="page-container">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">My Appointments</h1>
+      <p class="page-subtitle">All patient bookings for your slots.</p>
+    </div>
+  </div>
+
+  {% if appointments %}
+  <div class="card">
+    <div class="table-wrap">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Patient</th>
+            <th>Date</th>
+            <th>Time</th>
+            <th>Reason</th>
+            <th>Status</th>
+            <th>Booked On</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for appt in appointments %}
+          <tr>
+            <td>
+              <strong>{{ appt.patient.get_full_name|default:appt.patient.username }}</strong>
+              <div class="text-muted text-sm">{{ appt.patient.email }}</div>
+            </td>
+            <td>{{ appt.slot.date }}</td>
+            <td>{{ appt.slot.start_time|time:"H:i" }} – {{ appt.slot.end_time|time:"H:i" }}</td>
+            <td>{{ appt.reason|default:"—"|truncatechars:40 }}</td>
+            <td>
+              <span class="badge badge-{{ appt.status }}">{{ appt.status|capfirst }}</span>
+            </td>
+            <td class="text-muted text-sm">{{ appt.created_at|date:"d M Y" }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% if is_paginated %}
+    <div class="pagination">
+      {% if page_obj.has_previous %}<a href="?page={{ page_obj.previous_page_number }}" class="page-btn">← Prev</a>{% endif %}
+      <span class="page-info">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+      {% if page_obj.has_next %}<a href="?page={{ page_obj.next_page_number }}" class="page-btn">Next →</a>{% endif %}
+    </div>
+    {% endif %}
+  </div>
+  {% else %}
+  <div class="empty-page">
+    <div class="empty-icon">📭</div>
+    <h2>No appointments yet</h2>
+    <p>Once patients book your slots, appointments will appear here.</p>
+    <a href="{% url 'slot_create' %}" class="btn btn-primary">Add Availability Slots</a>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

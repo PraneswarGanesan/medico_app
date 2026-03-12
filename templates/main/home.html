@@ -1,0 +1,106 @@
+{% extends 'main/layout.html' %} {% block title %}Medico — Modern Hospital
+Management{% endblock %} {% block content %}
+<section class="hero">
+  <div class="hero-bg-grid"></div>
+  <div class="hero-inner">
+    <div class="hero-tag">✦ Healthcare, Reimagined</div>
+    <h1 class="hero-title">
+      Your Health,<br />
+      <em>Seamlessly</em> Managed.
+    </h1>
+    <p class="hero-subtitle">
+      Book doctor appointments, manage availability, and receive instant
+      notifications — all in one elegant platform built for modern healthcare.
+    </p>
+    <div class="hero-actions">
+      <a href="{% url 'signup_patient' %}" class="btn btn-hero-primary"
+        >Book an Appointment</a
+      >
+      <a href="{% url 'signup_doctor' %}" class="btn btn-hero-outline"
+        >Join as a Doctor</a
+      >
+    </div>
+    <div class="hero-stats">
+      <div class="stat">
+        <span class="stat-num">100%</span><span class="stat-label">Secure</span>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat">
+        <span class="stat-num">Real-time</span
+        ><span class="stat-label">Notifications</span>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat">
+        <span class="stat-num">No Overlap</span
+        ><span class="stat-label">Slot Booking</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="features">
+  <div class="section-inner">
+    <div class="section-tag">Why Medico ?</div>
+    <h2 class="section-title">Everything a modern clinic needs !!</h2>
+    <div class="features-grid">
+      <div class="feature-card">
+        <h3>Doctor Dashboard</h3>
+        <p>
+          Manage your time slots, view patient bookings, and track appointments
+          — all from one clean dashboard.
+        </p>
+      </div>
+      <div class="feature-card">
+        <h3>Smart Booking</h3>
+        <p>
+          Patients can browse available doctors and book slots in real time.
+          Race conditions handled automatically.
+        </p>
+      </div>
+      <div class="feature-card">
+        <h3>Email Notifications</h3>
+        <p>
+          Serverless AWS Lambda function sends confirmation emails instantly on
+          signup and booking.
+        </p>
+      </div>
+      <div class="feature-card">
+        <h3>Google Calendar</h3>
+        <p>
+          Confirmed appointments are automatically added to both the doctor's
+          and patient's Google Calendar.
+        </p>
+      </div>
+      <div class="feature-card">
+        <h3>Role-Based Access</h3>
+        <p>
+          Separate doctor and patient roles with secure, session-based
+          authentication and hashed passwords.
+        </p>
+      </div>
+      <div class="feature-card">
+        <h3>Serverless Backend</h3>
+        <p>
+          Email service runs as a Python Lambda function — scalable,
+          cost-effective, and locally testable.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta-section">
+  <div class="cta-inner">
+    <h2>Ready to get started?</h2>
+    <p>Join Medico today as a doctor or patient.</p>
+    <div class="cta-actions">
+      <a href="{% url 'signup_patient' %}" class="btn btn-hero-primary"
+        >I'm a Patient</a
+      >
+      <a href="{% url 'signup_doctor' %}" class="btn btn-hero-outline"
+        >I'm a Doctor</a
+      >
+    </div>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,92 @@
+{% extends 'main/layout.html' %}
+{% block title %}Patient Dashboard — Medico{% endblock %}
+
+{% block content %}
+<div class="page-container">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Hello, {{ user.get_full_name|default:user.username }} </h1>
+      <p class="page-subtitle">Manage your appointments and find doctors.</p>
+    </div>
+    <a href="{% url 'doctor_list' %}" class="btn btn-primary">Find a Doctor</a>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-row">
+    <div class="stat-card stat-sage">
+      
+      <div class="stat-card-body">
+        <div class="stat-card-num">{{ upcoming_appointments.count }}</div>
+        <div class="stat-card-label">Upcoming</div>
+      </div>
+    </div>
+    <div class="stat-card stat-yellow">
+      
+      <div class="stat-card-body">
+        <div class="stat-card-num">{{ total_appointments }}</div>
+        <div class="stat-card-label">Total Appointments</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="dashboard-grid">
+    <!-- Upcoming Appointments -->
+    <div class="dash-card">
+      <div class="dash-card-header">
+        <h2>Upcoming Appointments</h2>
+        <a href="{% url 'patient_appointments' %}" class="link-sm">View all →</a>
+      </div>
+      {% if upcoming_appointments %}
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr><th>Doctor</th><th>Specialization</th><th>Date</th><th>Time</th></tr>
+            </thead>
+            <tbody>
+              {% for appt in upcoming_appointments %}
+              <tr>
+                <td><strong>Dr. {{ appt.slot.doctor.get_full_name|default:appt.slot.doctor.username }}</strong></td>
+                <td>{{ appt.slot.doctor.doctor_profile.get_specialization_display }}</td>
+                <td>{{ appt.slot.date }}</td>
+                <td>{{ appt.slot.start_time|time:"H:i" }} – {{ appt.slot.end_time|time:"H:i" }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% else %}
+        <div class="empty-state">
+          
+          <p>No upcoming appointments.</p>
+          <a href="{% url 'doctor_list' %}" class="btn btn-primary">Book Now</a>
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- Past Appointments -->
+    <div class="dash-card">
+      <div class="dash-card-header">
+        <h2>Recent History</h2>
+      </div>
+      {% if past_appointments %}
+        <div class="slot-list-mini">
+          {% for appt in past_appointments %}
+          <div class="slot-mini">
+            <div>
+              <div class="slot-mini-date">Dr. {{ appt.slot.doctor.get_full_name|default:appt.slot.doctor.username }}</div>
+              <div class="slot-mini-time">{{ appt.slot.date }} · {{ appt.slot.start_time|time:"H:i" }}</div>
+            </div>
+            <span class="badge badge-{{ appt.status }}">{{ appt.status|capfirst }}</span>
+          </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="empty-state">
+          
+          <p>No past appointments.</p>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}
